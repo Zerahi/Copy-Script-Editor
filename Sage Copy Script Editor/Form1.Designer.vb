@@ -56,6 +56,7 @@ Partial Class Form1
         Me.btnInfName = New System.Windows.Forms.Button()
         Me.btnInfOuSub = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.SaveFileSave = New System.Windows.Forms.SaveFileDialog()
         Me.SuspendLayout()
         '
         'btnLoad
@@ -420,4 +421,5 @@ Partial Class Form1
     Friend WithEvents btnInfName As Button
     Friend WithEvents btnInfOuSub As Button
     Friend WithEvents btnUpdate As Button
+    Friend WithEvents SaveFileSave As SaveFileDialog
 End Class

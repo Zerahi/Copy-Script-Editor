@@ -21,7 +21,6 @@ ReDim source(num), dest(num), name(num), cptype(num), flname(num)
 'cptype 3 = copy all files with "name" in name, "name" "" will find all files in folder
 'cptype 4 = copy most recent files with "name" in name
 
-'BACnet config file
 source(1) = ""
 dest(1) = ""
 name(1) = ""
