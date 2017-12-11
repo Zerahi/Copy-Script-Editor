@@ -304,6 +304,7 @@ Public Class Form1
             Catch Ex As Exception
                 MessageBox.Show("Cannot read file from disk. Original error: " & Ex.Message)
             End Try
+            reader.Close()
         End If
     End Sub
 
@@ -434,20 +435,22 @@ Public Class Form1
     Private Sub IndexChange()
         If init = 1 Then
             If sel <> -1 Then
-                Dim src = source(sel + 1)
-                Dim fld = fldname(sel + 1)
-                Dim nm = filename(sel + 1)
-                Dim osub = dest(sel + 1)
-                Dim typ = CStr(cptype(sel + 1) - 1)
-                If src = Nothing Then src = ""
-                If fld = Nothing Then fld = ""
-                If nm = Nothing Then nm = ""
-                If osub = Nothing Then osub = ""
-                If typ = Nothing Then typ = ""
-                If tbxSource.Text <> src Or tbxSourceSub.Text <> fld Or tbxName.Text <> nm Or tbxOutSub.Text <> osub Or cmbxType.SelectedIndex <> typ Then
-                    Dim result = MessageBox.Show("Changes were made on the last selected Copy." + vbCrLf + "Would you lile to update the changes?" + vbCrLf + "(Click no to discard changes)", "Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                    If (result = DialogResult.Yes) Then
-                        UpdateCopy(sel)
+                If sel + 1 <= Count - 1 Then
+                    Dim src = source(sel + 1)
+                    Dim fld = fldname(sel + 1)
+                    Dim nm = filename(sel + 1)
+                    Dim osub = dest(sel + 1)
+                    Dim typ = CStr(cptype(sel + 1) - 1)
+                    If src = Nothing Then src = ""
+                    If fld = Nothing Then fld = ""
+                    If nm = Nothing Then nm = ""
+                    If osub = Nothing Then osub = ""
+                    If typ = Nothing Then typ = ""
+                    If tbxSource.Text <> src Or tbxSourceSub.Text <> fld Or tbxName.Text <> nm Or tbxOutSub.Text <> osub Or cmbxType.SelectedIndex <> typ Then
+                        Dim result = MessageBox.Show("Changes were made on the last selected Copy." + vbCrLf + "Would you lile to update the changes?" + vbCrLf + "(Click no to discard changes)", "Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                        If (result = DialogResult.Yes) Then
+                            UpdateCopy(sel)
+                        End If
                     End If
                 End If
             End If

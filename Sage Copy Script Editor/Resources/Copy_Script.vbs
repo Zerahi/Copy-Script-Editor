@@ -1,15 +1,17 @@
 Option Explicit
 Dim destination
 'To set destination change this value. (IF you have editing with notepad Save As and chose encoding ANSI, Notepad++ works better)
-'Change to 0 for C:\SageGlass Owner’s Manual Documents
-'Change to 1 for C:\Users\(Current User)\Desktop\SageGlass Owner’s Manual Documents
-'Change to 2 for Current folder, when you run the script it will create a new "SageGlass Owner’s Manual Documents" in the same place as the script 
+'Change to 0 for C:\(Folder)
+'Change to 1 for C:\Users\(Current User)\Desktop\(Folder)
+'Change to 2 for Current folder, when you run the script it will create a new (Folder) in the same place as the script 
 destination = 0
 '
 '
-Dim fso, path, file, subfolder, recentDate, recentFile, pfrom, pto, fname, fldname, source(), dest(), name(), flname(), cptype(), num, i, exp, cur, cnt, er, ermsg, cd, desk, curf, user
+Dim fso, path, file, subfolder, recentDate, recentFile, pfrom, pto, fname, fldname, source(), dest(), name(), flname(), cptype(), num, i, exp, cur, cnt, er, ermsg, cd, desk, curf, user, old, olds
 num = 1 ' total number of listed transfers
 cnt = 0
+old = false
+olds = ""
 ReDim source(num), dest(num), name(num), cptype(num), flname(num)
 'source = full file path if no rev number, if number could change set on folder up  a level and add unique partial name to flname
 'dest = folder to place files in, 2 folder copy will copy into dest if its same name, flname will look for if not blank
@@ -33,7 +35,7 @@ Set exp = WScript.CreateObject("InternetExplorer.Application")
 user = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%UserProfile%")
 cd = "C:\Copy\"
 desk = user + "\Desktop\Copy\"
-curf = fso.GetAbsolutePathName(".") + "\Copy\"
+curf = fso.GetFile(WScript.ScriptFullName).ParentFolder.Path + "\Copy\"
 On Error Resume Next
 
 exp.Navigate "about:blank" 
@@ -50,7 +52,7 @@ ermsg = "Missing Files:" & "<br/>"
 
 For i = 1 to num
 	cur =  i
-	If i = 25 Then
+	If i = 23 Then
 	exp.Document.Body.InnerHTML = "<Title>Progress</Title>Transferring File  " & i & "/" & num & "<br/>" & "Large File... Pease Wait"
 	Else
 	exp.Document.Body.InnerHTML = "<Title>Progress</Title>Transferring File  " & i & "/" & num
@@ -69,12 +71,23 @@ For i = 1 to num
 Next
 
 
+file = "S:\Software\Shared\Archive\Sage Tools copy script\" + Wscript.ScriptName
+If fso.FileExists(file) Then
+	If fso.GetFile(file).DateLastModified > fso.GetFile(Wscript.ScriptFullName).DateLastModified Then
+		old = True
+		exp.Height = 150
+	End If
+End If
+
+if old = true then olds = "Your local script is out of date, please get a new version from S:\Software\Shared\Archive\Sage Tools copy script"
+
 If er = 0 Then
-	exp.Document.Body.InnerHTML = "<Title>Complete</Title>Transfer Completed  " & num & "/" & num
+	
+	exp.Document.Body.InnerHTML = "<Title>Complete</Title>Transfer Completed  " & num & "/" & num & "<br/>" & olds
 Else
 	exp.Width= 500
 	exp.Height = 600
-	exp.Document.Body.InnerHTML = "<Title>Complete</Title>Transfer Completed  " & num & "/" & num & "<br/>" & ermsg
+	exp.Document.Body.InnerHTML = "<Title>Complete</Title>Transfer Completed  " & num & "/" & num & "<br/>" & olds & ermsg
 End If
 
 Sub Start(t)
@@ -219,7 +232,7 @@ Sub Start(t)
 				fso.CopyFile pfrom & "\" & recentFile.name, pto & "\", false
 			End If
 		End If
-	End If
+	End If             
 End Sub
 
 Sub BuildFullPath(ByVal FullPath)
